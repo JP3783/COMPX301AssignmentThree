@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -19,53 +20,45 @@ public class MakeBMTable {
         String tableFilePath = args[1];
 
         // Compute BM skip array
-        int[] skipArray = constructSkipArray(inputString);
+        ArrayList<ArrayList<String>> skipArray = constructSkipArray(inputString);
 
         // Write skip array to file
         writeSkipArrayToFile(skipArray, inputString, tableFilePath);
     }
 
     // Function to construct skip array and visualize it in the console
-    private static int[] constructSkipArray(String inputString) {
-        int[] skipArray = new int[256];
-        Arrays.fill(skipArray, inputString.length());
+    private static ArrayList<ArrayList<String>> constructSkipArray(String inputString) {
+        ArrayList<ArrayList<String>> skipArray = new ArrayList<>();
 
-        // Populate skip array
+        // Initialize skip array with *
+        ArrayList<String> headerRow = new ArrayList<>();
+        headerRow.add("*");
+        skipArray.add(headerRow);
+
+        // Add characters found in the input string to skip array
         for (int i = 0; i < inputString.length(); i++) {
-            skipArray[inputString.charAt(i)] = inputString.length() - i - 1;
+            ArrayList<String> row = new ArrayList<>();
+            char c = inputString.charAt(i);
+            row.add(String.valueOf(c));
+            skipArray.add(row);
         }
-
-        // Print skip array
-        // System.out.println("Skip Array:");
-        // for (int i = 0; i < 256; i++) {
-        //     if (skipArray[i] != inputString.length()) {
-        //         char c = (char) i;
-        //         System.out.println("Character: " + c + ", Skip Distance: " + skipArray[i]);
-        //     }
-        // }
 
         return skipArray;
     }
+
     // Function to write skip array to file
-    private static void writeSkipArrayToFile(int[] skipArray, String inputString, String filePath) {
+    private static void writeSkipArrayToFile(ArrayList<ArrayList<String>> skipArray, String inputString, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Write header row
-            StringBuilder headerRow = new StringBuilder("*");
-            for (int i = 0; i < inputString.length(); i++) {
-                headerRow.append(",").append(inputString.charAt(i));
+            // Write skip array to file
+            for (ArrayList<String> row : skipArray) {
+                for (int i = 0; i < row.size(); i++) {
+                    writer.write(row.get(i));
+                    if (i < row.size() - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
             }
-            writer.write(headerRow.toString());
-            writer.newLine();
-    
-            // Write skip array rows
-            //NEED TO IMPLEMENT THAT LOGIC
-            
-    
-            // Write the last row for characters not found in the pattern
-            //StringBuilder lastRow = new StringBuilder("*");
-            //Write out last row
-            //NEED TO IMPLEMENT THAT LOGIC
-            //writer.write(lastRow.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
