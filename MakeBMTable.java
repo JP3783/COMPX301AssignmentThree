@@ -1,7 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -37,17 +36,38 @@ public class MakeBMTable {
         }
 
         // Print skip array
-        System.out.println("Skip Array:");
-        for (int i = 0; i < 256; i++) {
-            if (skipArray[i] != inputString.length()) {
-                char c = (char) i;
-                System.out.println("Character: " + c + ", Skip Distance: " + skipArray[i]);
-            }
-        }
+        // System.out.println("Skip Array:");
+        // for (int i = 0; i < 256; i++) {
+        //     if (skipArray[i] != inputString.length()) {
+        //         char c = (char) i;
+        //         System.out.println("Character: " + c + ", Skip Distance: " + skipArray[i]);
+        //     }
+        // }
 
         return skipArray;
     }
     // Function to write skip array to file
     private static void writeSkipArrayToFile(int[] skipArray, String inputString, String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // Write header row
+            StringBuilder headerRow = new StringBuilder("*");
+            for (int i = 0; i < inputString.length(); i++) {
+                headerRow.append(",").append(inputString.charAt(i));
+            }
+            writer.write(headerRow.toString());
+            writer.newLine();
+    
+            // Write skip array rows
+            //NEED TO IMPLEMENT THAT LOGIC
+            
+    
+            // Write the last row for characters not found in the pattern
+            //StringBuilder lastRow = new StringBuilder("*");
+            //Write out last row
+            //NEED TO IMPLEMENT THAT LOGIC
+            //writer.write(lastRow.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
