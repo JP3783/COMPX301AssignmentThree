@@ -48,6 +48,7 @@ public class MakeBMTable {
                 } else {
                     row.add("-1"); //Not a match 
                     //NEED TO IMPLEMENT LOGIC HERE FOR CALCULATING SKIP DISTANCE
+
                 }
             }
             skipArray.add(row);
@@ -76,6 +77,7 @@ public class MakeBMTable {
                 }
                 writer.newLine();
             }
+            System.out.println("Successfully written to " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

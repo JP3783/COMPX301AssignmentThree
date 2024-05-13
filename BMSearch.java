@@ -25,6 +25,6 @@ public class BMSearch {
 
     // Function to search for target string in text file using skip array
     private static void searchInText(String textFile, int[][] skipArray) {
-
+        
     }
 }
