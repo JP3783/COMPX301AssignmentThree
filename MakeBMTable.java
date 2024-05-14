@@ -18,6 +18,8 @@ public class MakeBMTable {
         ArrayList<ArrayList<String>> skipArray = constructSkipArray(inputString);
 
         writeSkipArrayToFile(skipArray, tableFilePath);
+
+        
     }
 
     private static ArrayList<ArrayList<String>> constructSkipArray(String inputString) {
@@ -43,13 +45,16 @@ public class MakeBMTable {
             //Character to compare to 
             row.add(String.valueOf(c));
             for (int i = 0; i < inputString.length(); i++) {
-                if (inputString.charAt(i) == c) {
-                    row.add("0"); //Match
-                } else {
-                    row.add("-1"); //Not a match 
-                    //NEED TO IMPLEMENT LOGIC HERE FOR CALCULATING SKIP DISTANCE
+                int skipDistance = calculateSkipDistance(inputString, i);
+                row.add(String.valueOf(skipDistance));
+                // if (inputString.charAt(i) == c) {
+                //     row.add("0"); //Match
+                // } else {
+                //     // Calculate the skip distance based on the Good Suffix Heuristic
+                //     int skipDistance = calculateSkipDistance(inputString, i);
+                //     row.add(String.valueOf(skipDistance));
 
-                }
+                // }
             }
             skipArray.add(row);
         }
@@ -82,4 +87,11 @@ public class MakeBMTable {
             e.printStackTrace();
         }
     }
+
+
+    private static int calculateSkipDistance(String inputString, int i){
+        //inputString is just kokako
+        return -1;
+    }
+
 }
