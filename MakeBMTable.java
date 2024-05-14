@@ -19,7 +19,7 @@ public class MakeBMTable {
 
         writeSkipArrayToFile(skipArray, tableFilePath);
 
-        
+
     }
 
     private static ArrayList<ArrayList<String>> constructSkipArray(String inputString) {
@@ -45,16 +45,14 @@ public class MakeBMTable {
             //Character to compare to 
             row.add(String.valueOf(c));
             for (int i = 0; i < inputString.length(); i++) {
-                int skipDistance = calculateSkipDistance(inputString, i);
-                row.add(String.valueOf(skipDistance));
-                // if (inputString.charAt(i) == c) {
-                //     row.add("0"); //Match
-                // } else {
-                //     // Calculate the skip distance based on the Good Suffix Heuristic
-                //     int skipDistance = calculateSkipDistance(inputString, i);
-                //     row.add(String.valueOf(skipDistance));
-
-                // }
+                if (inputString.charAt(i) == c) {
+                    row.add("0"); //Match
+                    System.out.println(i + " dont skip " + c);
+                } else {
+                    // Calculate the skip distance based on the Good Suffix Heuristic
+                    int skipDistance = calculateSkipDistance(inputString, i, c);
+                    row.add(String.valueOf(skipDistance));
+                }
             }
             skipArray.add(row);
         }
@@ -63,8 +61,7 @@ public class MakeBMTable {
         ArrayList<String> notFoundRow = new ArrayList<>();
         notFoundRow.add("*");
         for (int i = 0; i < inputString.length(); i++) {
-            notFoundRow.add("-1"); //Not a match 
-            //NEED TO IMPLEMENT LOGIC HERE FOR CALCULATING SKIP DISTANCE
+            //notFoundRow.add(String.valueOf(inputString.length())); //Length of the pattern ????????????
         }
         skipArray.add(notFoundRow);
 
@@ -89,9 +86,37 @@ public class MakeBMTable {
     }
 
 
-    private static int calculateSkipDistance(String inputString, int i){
+    private static int calculateSkipDistance(String inputString, int i, char c){
         //inputString is just kokako
-        return -1;
+
+        char character = inputString.charAt(i);
+        System.out.println("== " + i + " " + "Expect: " + character + " See: " + c);
+
+
+        StringBuilder sb = new StringBuilder();
+        for(int j = i; j < inputString.length(); j++) {
+            if(i == j) {
+            sb.append(c);
+            } else {
+            sb.append(inputString.charAt(j));
+            }
+        }
+        System.out.println(sb);
+        
+        if (inputString.contains(sb)) {
+            System.out.println( "' found in string.");
+            //Find distance to the nearest one
+        } else {
+            System.out.println("' not found in string.");
+            //Print the lenfth of the string
+            return inputString.length();
+        }
+
+        int lastOccurrence = inputString.lastIndexOf(c);
+        int value = i - lastOccurrence;
+        return value;
     }
+
+
 
 }
