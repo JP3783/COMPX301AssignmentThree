@@ -41,8 +41,9 @@ public class BMSearch {
         try(BufferedReader br = new BufferedReader(new FileReader(textFile))){
             String line;
             
+            //Search for word
             while ((line = br.readLine()) != null){
-                //Search for word in searchString
+                //If word is found in the line, display the line
                 if(line.contains(searchString)){
                     System.out.println(line);
                 }
