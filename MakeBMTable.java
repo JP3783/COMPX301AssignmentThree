@@ -18,10 +18,9 @@ public class MakeBMTable {
         ArrayList<ArrayList<String>> skipArray = constructSkipArray(inputString);
 
         writeSkipArrayToFile(skipArray, tableFilePath);
-
-
     }
 
+    
     private static ArrayList<ArrayList<String>> constructSkipArray(String inputString) {
         ArrayList<ArrayList<String>> skipArray = new ArrayList<>();
 
@@ -45,14 +44,12 @@ public class MakeBMTable {
             //Character to compare to 
             row.add(String.valueOf(c));
             for (int i = 0; i < inputString.length(); i++) {
-                if (inputString.charAt(i) == c) {
-                    row.add("0"); //Match
-                    System.out.println(i + " dont skip " + c);
-                } else {
-                    // Calculate the skip distance based on the Good Suffix Heuristic
-                    int skipDistance = calculateSkipDistance(inputString, i, c);
-                    row.add(String.valueOf(skipDistance));
-                }
+                String tmp = inputString.substring(i, inputString.length());
+                StringBuilder sb = new StringBuilder(tmp);
+                sb.setCharAt(0, c);
+                String text = sb.toString();
+                int skipDistance = calculateSkipDistance(text, inputString);
+                row.add(String.valueOf(skipDistance));
             }
             skipArray.add(row);
         }
@@ -61,12 +58,43 @@ public class MakeBMTable {
         ArrayList<String> notFoundRow = new ArrayList<>();
         notFoundRow.add("*");
         for (int i = 0; i < inputString.length(); i++) {
-            //notFoundRow.add(String.valueOf(inputString.length())); //Length of the pattern ????????????
+            String tmp = inputString.substring(i, inputString.length());
+            StringBuilder sb = new StringBuilder(tmp);
+            sb.setCharAt(0, '*');
+            String text = sb.toString();
+            int skipDistance = calculateSkipDistance(text, inputString);
+            notFoundRow.add(String.valueOf(skipDistance));
         }
         skipArray.add(notFoundRow);
 
         return skipArray;
     }
+
+
+        public static int calculateSkipDistance(String text, String pattern) {
+        int textLength = text.length();
+        int patternLength = pattern.length();
+
+        for (int i = 0; i < patternLength; i++) {
+            
+            String subPattern = pattern.substring(0, patternLength - i);
+            String subText = text;
+
+            if(subPattern.length() > textLength){
+                subPattern = pattern.substring(subPattern.length() - textLength, patternLength - i);
+            }
+            else if(subPattern.length() < textLength){
+                subText = text.substring(textLength - subPattern.length(), textLength);
+            }
+            if (subPattern.equals(subText)){
+                //Return the distance which is the amount of times the pattern has been moved across
+                return i;
+            }
+        }
+        //If it is not found return 6
+        return 6;
+    }
+
 
     private static void writeSkipArrayToFile(ArrayList<ArrayList<String>> skipArray, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -84,39 +112,4 @@ public class MakeBMTable {
             e.printStackTrace();
         }
     }
-
-
-    private static int calculateSkipDistance(String inputString, int i, char c){
-        //inputString is just kokako
-
-        char character = inputString.charAt(i);
-        System.out.println("== " + i + " " + "Expect: " + character + " See: " + c);
-
-
-        StringBuilder sb = new StringBuilder();
-        for(int j = i; j < inputString.length(); j++) {
-            if(i == j) {
-            sb.append(c);
-            } else {
-            sb.append(inputString.charAt(j));
-            }
-        }
-        System.out.println(sb);
-        
-        if (inputString.contains(sb)) {
-            System.out.println( "' found in string.");
-            //Find distance to the nearest one
-        } else {
-            System.out.println("' not found in string.");
-            //Print the lenfth of the string
-            return inputString.length();
-        }
-
-        int lastOccurrence = inputString.lastIndexOf(c);
-        int value = i - lastOccurrence;
-        return value;
-    }
-
-
-
 }
