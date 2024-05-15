@@ -92,7 +92,7 @@ public class MakeBMTable {
             }
         }
         //If it is not found return 6
-        return 6;
+        return patternLength;
     }
 
 
