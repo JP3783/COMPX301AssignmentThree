@@ -1,4 +1,11 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class BMSearch {
+
+    private static String searchString;
+
     public static void main(String[] args) {
         // Check if command-line arguments are provided correctly
         if (args.length != 2) {
@@ -10,21 +17,36 @@ public class BMSearch {
         String skipArrayFile = args[0];
         String textFile = args[1];
 
-        // Read and store skip array file
-        int[][] skipArray = readSkipArray(skipArrayFile);
-
-        // Search for target string
-        searchInText(textFile, skipArray);
+        try{
+            loadSkipArray(skipArrayFile);
+            searchInText(textFile);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
-    // Function to read skip array file and return skip array
-    private static int[][] readSkipArray(String skipArrayFile) {
-        int[][] skipArray = null;
-        return skipArray;
+    private static void loadSkipArray(String skipArrayFile) throws IOException{
+        try(BufferedReader reader = new BufferedReader(new FileReader(skipArrayFile))){
+            //The first line contains the word, so extract it
+            String line = reader.readLine();
+            String resultString = line.replaceAll("[,*]", "");
+            searchString = resultString;
+
+            //System.out.println(searchString);  //Test if it outputs the correct word
+        }
     }
 
-    // Function to search for target string in text file using skip array
-    private static void searchInText(String textFile, int[][] skipArray) {
-        
+    // Function to search for target string in text file
+    private static void searchInText(String textFile) throws IOException{
+        try(BufferedReader br = new BufferedReader(new FileReader(textFile))){
+            String line;
+            
+            while ((line = br.readLine()) != null){
+                //Search for word in searchString
+                if(line.contains(searchString)){
+                    System.out.println(line);
+                }
+            }
+        }
     }
 }
