@@ -1,3 +1,8 @@
+/**
+ * Student 1: William Malone ID: 1604564
+ * Student 2: Justin Poutoa ID: 1620107
+ */
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,25 +17,26 @@ public class MakeBMTable {
             System.exit(1);
         }
 
+        // Parse command-line arguments
         String inputString = args[0];
         String tableFilePath = args[1];
 
+        // Construct the skip array 
         ArrayList<ArrayList<String>> skipArray = constructSkipArray(inputString);
-
         writeSkipArrayToFile(skipArray, tableFilePath);
     }
 
-    
+    // Construct the skip array
     private static ArrayList<ArrayList<String>> constructSkipArray(String inputString) {
         ArrayList<ArrayList<String>> skipArray = new ArrayList<>();
 
-        //Code to find the unique characters for the -COLUMN-
+        //Code to find the unique characters for the COLUMN
         Set<Character> uniqueChars = new HashSet<>();
         for (char c : inputString.toCharArray()) {
             uniqueChars.add(c);
         }
 
-        //Code to populate the top -ROW- with the string to search for
+        //Code to populate the top ROW with the string to search for
         ArrayList<String> patternRow = new ArrayList<>();
         patternRow.add("*");
         for (char c : inputString.toCharArray()) {
@@ -44,11 +50,14 @@ public class MakeBMTable {
             //Character to compare to 
             row.add(String.valueOf(c));
             for (int i = 0; i < inputString.length(); i++) {
+                // Construct a string that consists of the input string starting with the character we are looking at 
                 String tmp = inputString.substring(i, inputString.length());
                 StringBuilder sb = new StringBuilder(tmp);
                 sb.setCharAt(0, c);
                 String text = sb.toString();
+                // Calculate the skip distance for the string we are looking at
                 int skipDistance = calculateSkipDistance(text, inputString);
+                // Add to array
                 row.add(String.valueOf(skipDistance));
             }
             skipArray.add(row);
@@ -58,20 +67,22 @@ public class MakeBMTable {
         ArrayList<String> notFoundRow = new ArrayList<>();
         notFoundRow.add("*");
         for (int i = 0; i < inputString.length(); i++) {
+            // Construct a string that consists of the input string starting with the character we are looking at 
             String tmp = inputString.substring(i, inputString.length());
             StringBuilder sb = new StringBuilder(tmp);
             sb.setCharAt(0, '*');
             String text = sb.toString();
+            // Calculate the skip distance for the string we are looking at 
             int skipDistance = calculateSkipDistance(text, inputString);
+            // Add to array
             notFoundRow.add(String.valueOf(skipDistance));
         }
         skipArray.add(notFoundRow);
-
         return skipArray;
     }
 
-
-        public static int calculateSkipDistance(String text, String pattern) {
+    // Method to calculate the skip distance
+    public static int calculateSkipDistance(String text, String pattern) {
         int textLength = text.length();
         int patternLength = pattern.length();
 
@@ -95,7 +106,7 @@ public class MakeBMTable {
         return patternLength;
     }
 
-
+    // Write the skip array to the specified output file
     private static void writeSkipArrayToFile(ArrayList<ArrayList<String>> skipArray, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (ArrayList<String> row : skipArray) {
